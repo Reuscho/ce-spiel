@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>CE Maßnahmen Spiel</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
+
+    .tree-container {
+      position: relative;
+      margin: 2rem auto;
+      width: 300px;
+    }
+
+    .tree-container img.fruit {
+      position: absolute;
+      width: 40px;
+      cursor: pointer;
+    }
+
+    .basket-container {
+      margin-top: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .basket-icons {
+      position: absolute;
+      top: 35%;
+      left: 15%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      width: 70%;
+      justify-content: center;
+    }
+
+    .info-box {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #e0f7fa;
+      border-radius: 8px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Klicke auf die Low-Hanging Fruits für CE-Maßnahmen im Fahrzeugsektor, um sie zu pflücken und in deinen Korb zu legen!</h1>
+
+  <!-- Baum mit Früchten -->
+  <div class="tree-container">
+    <img src="tree.svg" alt="Baum" width="300" />
+
+    <img src="batterie_logo.svg" class="fruit" data-item="batterie" alt="Batterie" style="top: 150px; left: 130px;" onclick="addToBasket('batterie')" />
+    <img src="id-card.svg" class="fruit" data-item="produktpass" alt="Produktpass" style="top: 180px; left: 70px;" onclick="addToBasket('produktpass')" />
+    <img src="RECYCL02.svg" class="fruit" data-item="recyclat" alt="Recyclat" style="top: 180px; left: 190px;" onclick="addToBasket('recyclat')" />
+    <img src="Pfand.svg" class="fruit" data-item="pfand" alt="Pfand" style="top: 210px; left: 130px;" onclick="addToBasket('pfand')" />
+  </div>
+
+  <!-- Korb -->
+  <div class="basket-container">
+    <img src="basket.svg" alt="Korb" width="250" />
+    <div class="basket-icons" id="basketIcons"></div>
+  </div>
+
+  <!-- Infobox -->
+  <div class="info-box" id="infoBox"></div>
+
+  <script>
+    const basket = new Set();
+
+    function addToBasket(item) {
+      if (basket.has(item)) return;
+
+      basket.add(item);
+
+      // Verstecke das Symbol am Baum
+      const fruit = document.querySelector(`.fruit[data-item="${item}"]`);
+      if (fruit) fruit.style.display = "none";
+
+      // Icon in den Korb einfügen
+      const icon = document.createElement("img");
+      icon.src = getIconPath(item);
+      icon.alt = `${capitalize(item)} im Korb`;
+      icon.width = 40;
+      document.getElementById("basketIcons").appendChild(icon);
+
+      // Infobox aktualisieren
+      const infoText = getInfoText(item);
+      const infoBox = document.getElementById("infoBox");
+      infoBox.innerHTML = `<strong>Info:</strong> ${infoText}`;
+      infoBox.style.display = "block";
+    }
+
+    function getInfoText(item) {
+      switch (item) {
+        case 'batterie':
+          return '🔋 Standardisierte Demontage- und Recyclingprozesse für ausgewählte Komponenten, z. B. Batterien, Elektromotoren, Displays.';
+        case 'produktpass':
+          return '🪪 Digitale Produktpässe für neue Fahrzeuggenerationen, um Lebenszyklusdaten zu erfassen und nutzbar zu machen.';
+        case 'recyclat':
+          return '♻️ Förderung von Rezyklateinsatz in nicht sicherheitsrelevanten Bauteilen (z. B. Innenraumkunststoffe).';
+        case 'pfand':
+          return '💰 Rücknahme- und Pfandsysteme: Für wertvolle Komponenten und Materialien.';
+        default:
+          return '';
+      }
+    }
+
+    function getIconPath(item) {
+      switch (item) {
+        case 'batterie': return 'batterie_logo.svg';
+        case 'produktpass': return 'id-card.svg';
+        case 'recyclat': return 'RECYCL02.svg';
+        case 'pfand': return 'Pfand.svg';
+        default: return '';
+      }
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+  </script>
+
+</body>
+</html>
